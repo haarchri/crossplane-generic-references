@@ -112,7 +112,6 @@ spec:
         referableRef:
           name: referable-networkfirewall-endpoints
           key: firewallStatus[0].syncStates[0].attachment[0].endpointId
-          optional: false
 ---
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Route
@@ -133,7 +132,6 @@ spec:
         referableRef:
           name: referable-networkfirewall-endpoints
           key: firewallStatus[0].syncStates[1].attachment[0].endpointId
-          optional: false
 ---
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Route
@@ -154,4 +152,3 @@ spec:
         referableRef:
           name: referable-networkfirewall-endpoints
           key: firewallStatus[0].syncStates[2].attachment[0].endpointId
-          optional: false

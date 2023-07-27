@@ -126,7 +126,7 @@ spec:
     resource: routeTable
     subnet: inspection-a
     vpn-stack: all
-  vpcEndpointIdRef: referable-networkfirewall-endpoints-a ##
+  vpcEndpointIdRef: referable-networkfirewall-endpoints-a ## 
 ---
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: Route

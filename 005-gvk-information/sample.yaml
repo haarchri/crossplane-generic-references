@@ -1,0 +1,120 @@
+apiVersion: networkfirewall.aws.upbound.io/v1beta1
+kind: Firewall
+metadata:
+ name: vpn-firewall
+spec:
+ deletionPolicy: Delete
+ forProvider:
+  firewallPolicyArn: arn:aws:network-firewall:eu-central-1:12345678910:firewall-policy/vpn-firewall
+  firewallPolicyArnRef:
+   name: vpn-firewall
+  firewallPolicyArnSelector:
+   matchLabels:
+    resource: firewallPolicy
+    type: vpn
+  name: vpn-firewall
+  region: eu-central-1
+  subnetMapping:
+  - subnetId: subnet-087a5b6d49eebaa4a
+   subnetIdRef:
+    name: vpn-firewall-a
+   subnetIdSelector:
+    matchLabels:
+     resource: subnet
+     subnet: firewall-a
+  - subnetId: subnet-087a5b6d49eebaa4b
+   subnetIdRef:
+    name: vpn-firewall-b
+   subnetIdSelector:
+    matchLabels:
+     resource: subnet
+     subnet: firewall-b
+  - subnetId: subnet-087a5b6d49eebaa4c
+   subnetIdRef:
+    name: vpn-firewall-c
+   subnetIdSelector:
+    matchLabels:
+     resource: subnet
+     subnet: firewall-c
+  vpcId: vpc-00480c11622f4b12r
+  vpcIdRef:
+   name: vpn-test
+  vpcIdSelector:
+   matchLabels:
+    resource: vpc
+    type: test
+status:
+ atProvider:
+  [...]
+  firewallStatus:
+  - syncStates:
+    - attachment:
+      - endpointId: vpce-04437be16349a4799
+        subnetId: subnet-087a5b6d49eebaa4a
+      availabilityZone: eu-central-1a
+    - attachment:
+      - endpointId: vpce-053af1998f429238a
+        subnetId: subnet-08cb25b26e36faa4b
+      availabilityZone: eu-central-1b
+    - attachment:
+      - endpointId: vpce-0ee94e485309bbc74
+        subnetId: subnet-0bfb8bbf5089caa4c
+      availabilityZone: eu-central-1c
+  [...]
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+ name: route-a
+spec:
+  forProvider:
+    destinationCidrBlock: 0.0.0.0/0
+    region: eu-central-1
+    vpcEndpointIdRef:
+      apiVersion: networkfirewall.aws.upbound.io/v1beta1
+      kind: Firewall
+      name: vpn-firewall
+      fieldPath: status.atProvider.firewallStatus.syncStates[0].attachment[0].endpointId
+    routeTableIdSelector:
+      matchLabels:
+        resource: routeTable
+        subnet: inspection-a
+        vpn-stack: all
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+ name: route-b
+spec:
+  forProvider:
+    destinationCidrBlock: 0.0.0.0/0
+    region: eu-central-1
+    vpcEndpointIdRef:
+      apiVersion: networkfirewall.aws.upbound.io/v1beta1
+      kind: Firewall
+      name: vpn-firewall
+      fieldPath: status.atProvider.firewallStatus.syncStates[1].attachment[0].endpointId
+    routeTableIdSelector:
+      matchLabels:
+        resource: routeTable
+        subnet: inspection-b
+        vpn-stack: all
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+ name: route-c
+spec:
+  forProvider:
+    destinationCidrBlock: 0.0.0.0/0
+    region: eu-central-1
+    vpcEndpointIdRef:
+      apiVersion: networkfirewall.aws.upbound.io/v1beta1
+      kind: Firewall
+      name: vpn-firewall
+      fieldPath: status.atProvider.firewallStatus.syncStates[2].attachment[0].endpointId
+    routeTableIdSelector:
+      matchLabels:
+        resource: routeTable
+        subnet: inspection-c
+        vpn-stack: all

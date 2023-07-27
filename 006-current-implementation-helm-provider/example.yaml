@@ -1,0 +1,22 @@
+apiVersion: helm.crossplane.io/v1beta1
+kind: Release
+spec:
+  rollbackLimit: 3
+  forProvider:
+    namespace: castai-agent
+    chart:
+      name: castai-spot-handler
+      repository: https://castai.github.io/helm-charts/
+      version: "0.18.2"
+    values:
+      castai: 
+        provider: aws
+        clusterID: #patched
+    set:
+      - name: castai.clusterID
+        valueFrom:
+          secretKeyRef:
+            key: attribute.cluster_id
+            name: castai-example
+            namespace: crossplane-system
+            optional: false
