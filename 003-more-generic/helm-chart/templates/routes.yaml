@@ -1,0 +1,24 @@
+{{- range $index, $route := .Values.routes }}
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+  name: {{ $route.name }}
+spec:
+  forProvider:
+    destinationCidrBlock: 0.0.0.0/0
+    region: eu-central-1
+    routeTableIdSelector:
+      matchLabels:
+        resource: routeTable
+        subnet: inspection-{{ $route.name }}
+        vpn-stack: all
+  refs:
+    - toFieldPath: spec.forProvider.vpcEndpointId
+      valueFrom:
+        objectRef:
+          - apiVersion: networkfirewall.aws.upbound.io/v1beta1
+            kind: Firewall
+            name: vpn-firewall
+            fieldPath: status.atProvider.firewallStatus.syncStates[{{ $index }}].attachment[0].endpointId
+        optional: false
+{{- end }}

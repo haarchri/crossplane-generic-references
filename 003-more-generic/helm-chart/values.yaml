@@ -1,0 +1,7 @@
+nameOverride: ""
+fullnameOverride: ""
+
+routes:
+  - name: route-a
+  - name: route-b
+  - name: route-c

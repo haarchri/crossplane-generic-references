@@ -1,0 +1,86 @@
+
+# destination_location_arn - (Required) Amazon Resource Name (ARN) of destination DataSync Location.
+# source_location_arn - (Required) Amazon Resource Name (ARN) of source DataSync Location.
+#   
+# apiVersion: datasync.aws.upbound.io/v1beta1
+# kind: LocationS3
+# kind: LocationSmb
+# kind: LocationObjectStorage
+# kind: LocationNfs
+# kind: LocationHdfs
+# kind: LocationFsxWindowsFileSystem
+# kind: LocationFsxOpenzfsFileSytem
+# kind: LocationFsxLustreFileSystem
+# kind: LocationEfs
+
+apiVersion: datasync.aws.upbound.io/v1beta1
+kind: Task
+metadata:
+  name: datasync-task-example
+spec:
+  forProvider:
+    name: datasync-task-example
+    region: us-west-1
+    cloudwatchLogGroupArnSelector:
+      matchLabels:
+        testing.upbound.io/example-name: datasync-cloudwatchloggroup
+    options:
+      - bytesPerSecond: -1
+        posixPermissions: "NONE"
+        gid: "NONE"
+        uid: "NONE"
+        preserveDeletedFiles: "REMOVE"
+        verifyMode: "ONLY_FILES_TRANSFERRED"
+  refs:
+    - toFieldPath: spec.forProvider.sourceLocationArn
+      valueFrom:
+        objectRef:
+          - apiVersion: datasync.aws.upbound.io/v1beta1
+            kind: LocationS3
+            name: source-location
+            fieldPath: metadata.annotations[crossplane.io/external-name]
+            optional: false
+    - toFieldPath: spec.forProvider.destinationLocationArn
+      valueFrom:
+        objectRef:
+          - apiVersion: datasync.aws.upbound.io/v1beta1
+            kind: LocationS3
+            name: destination-location
+            fieldPath: metadata.annotations[crossplane.io/external-name]
+            optional: false
+---
+apiVersion: datasync.aws.upbound.io/v1beta1
+kind: Task
+metadata:
+  name: datasync-task-example
+spec:
+  forProvider:
+    name: datasync-task-example
+    region: us-west-1
+    cloudwatchLogGroupArnSelector:
+      matchLabels:
+        testing.upbound.io/example-name: datasync-cloudwatchloggroup
+    options:
+      - bytesPerSecond: -1
+        posixPermissions: "NONE"
+        gid: "NONE"
+        uid: "NONE"
+        preserveDeletedFiles: "REMOVE"
+        verifyMode: "ONLY_FILES_TRANSFERRED"
+  refs:
+    - toFieldPath: spec.forProvider.sourceLocationArn
+      valueFrom:
+        objectRef:
+          - apiVersion: datasync.aws.upbound.io/v1beta1
+            kind: LocationNfs
+            name: source-location-nfs
+            fieldPath: metadata.annotations[crossplane.io/external-name]
+            optional: false
+    - toFieldPath: spec.forProvider.destinationLocationArn
+      valueFrom:
+        objectRef:
+          - apiVersion: datasync.aws.upbound.io/v1beta1
+            kind: LocationNfs
+            name: destination-location-nfs
+            fieldPath: metadata.annotations[crossplane.io/external-name]
+            optional: false

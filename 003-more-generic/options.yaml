@@ -1,0 +1,28 @@
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: xxx
+metadata:
+ name: xxx
+spec:
+  refs:
+    - toFieldPath: spec.forProvider.vpcEndpointId
+      valueFrom:
+        objectRef:
+          - apiVersion: networkfirewall.aws.upbound.io/v1beta1
+            kind: Firewall
+            name: vpn-firewall
+            fieldPath: status.atProvider.firewallStatus.syncStates[1].attachment[0].endpointId
+            optional: false
+    - toFieldPath: spec.forProvider.vpcEndpointId
+      valueFrom:
+        secretKeyRef:
+          name: referable-networkfirewall-endpoints
+          namespace: namespace-a
+          key: attribute.key
+          optional: false
+    - toFieldPath: spec.forProvider.vpcEndpointId
+      valueFrom:
+        configmapKeyRef:
+          name: referable-networkfirewall-endpoints
+          namespace: namespace-b
+          key: attribute.key
+          optional: false
