@@ -1,0 +1,57 @@
+apiVersion: datasync.aws.upbound.io/v1beta1
+kind: Task
+metadata:
+  name: datasync-task-example
+spec:
+  forProvider:
+    name: datasync-task-example
+    region: us-west-1
+    cloudwatchLogGroupArnSelector:
+      matchLabels:
+        testing.upbound.io/example-name: datasync-cloudwatchloggroup
+    sourceLocationArnRef:
+      apiVersion: datasync.aws.upbound.io/v1beta1
+      kind: LocationS3
+      name: source-location
+      fieldPath: metadata.annotations[crossplane.io/external-name]
+    destinationLocationArnRef:
+      apiVersion: datasync.aws.upbound.io/v1beta1
+      kind: LocationS3
+      name: destination-location
+      fieldPath: metadata.annotations[crossplane.io/external-name]
+    options:
+      - bytesPerSecond: -1
+        posixPermissions: "NONE"
+        gid: "NONE"
+        uid: "NONE"
+        preserveDeletedFiles: "REMOVE"
+        verifyMode: "ONLY_FILES_TRANSFERRED"
+---
+apiVersion: datasync.aws.upbound.io/v1beta1
+kind: Task
+metadata:
+  name: datasync-task-example
+spec:
+  forProvider:
+    name: datasync-task-example
+    region: us-west-1
+    cloudwatchLogGroupArnSelector:
+      matchLabels:
+        testing.upbound.io/example-name: datasync-cloudwatchloggroup
+    sourceLocationArnRef:
+      apiVersion: datasync.aws.upbound.io/v1beta1
+      kind: LocationNfs
+      name: source-location-nfs
+      fieldPath: metadata.annotations[crossplane.io/external-name]
+    destinationLocationArnRef:
+      apiVersion: datasync.aws.upbound.io/v1beta1
+      kind: LocationNfs
+      name: destination-location-nfs
+      fieldPath: metadata.annotations[crossplane.io/external-name]
+    options:
+      - bytesPerSecond: -1
+        posixPermissions: "NONE"
+        gid: "NONE"
+        uid: "NONE"
+        preserveDeletedFiles: "REMOVE"
+        verifyMode: "ONLY_FILES_TRANSFERRED"
